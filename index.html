@@ -7,14 +7,21 @@
 	<link href="style.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="main.js"></script>
+	<script src="music_sync.js"></script>
 </head>
 <body>
-	<input id="bridge_ip" type="text" placeholder="put the bridge IP address here" value="192.168.1.100">
+	<input id="bridge_ip" type="text" placeholder="put the bridge IP address here" value="192.168.1.99" placeholder="192.168.0.132">
 	<div>Press the hue bridge button and then <button id="connect-button">this button</button></div>
+	<div id="light_placement_container">
+		<div id="light-list" class="drop-partner"></div>
+		<div id="light-placement" class="drop-partner"></div>
+	</div>
+	<audio id="main-player" src="mainstreet_electrical_parade.mp4" controls></audio><button id="save-script">save script</button>
+
 	<div>Get light list: <button id="get-light-list-button">Get light list</button>
 	<div >Feedback: <p id="feedback"></p></div>
-	<div id="light-list">
-	</div>
+
 </body>
 </html>
