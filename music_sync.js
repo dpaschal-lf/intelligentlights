@@ -3,7 +3,7 @@ var script = [];
 var script_bookmark = 0;
 var next_script_trigger_time = 999999;
 var player;
-$(document).ready(initialize_music_sync)
+$(document).ready(initialize_music_sync);
 
 function initialize_music_sync(){
 	player = document.getElementById('main-player');

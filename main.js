@@ -1,6 +1,6 @@
 $(document).ready(initialize);
 var bridge_address;
-var username=null;
+var username="8SKJ5MaGrYqWBdeJgGRCHqwYiR6YS28hQVc5GiSd";
 var light_list={};
 var interval_timer_ids=[];
 var freak_out_interval;
@@ -365,7 +365,7 @@ function display_light(light){
 			on: !light.state.on
 		},true);
 	});
-	off_on_container.append(off_on_control,off_on_label);
+	//off_on_container.append(off_on_control,off_on_label);
 	light_controls.append(brightness_control,off_on_container);
 	light_div.append(light_icon, light_info, light_controls);
 	return light_div;
