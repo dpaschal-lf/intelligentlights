@@ -1,6 +1,6 @@
 $(document).ready(initialize);
 var bridge_address;
-var username=null;
+var username="XkHqRFSGaqsROqy94-UZCwIlYVBgxAAQKHNd2Dlw";
 var light_list={};
 var interval_timer_ids=[];
 var freak_out_interval;
@@ -385,7 +385,7 @@ function show_feedback(message, status){
 function connect_to_bridge(){
 	var url = bridge_ip;
 	var data = {
-		"devicetype":"danielwpaschal",
+		"devicetype":"joshuabyun",
 	};
 	var method = 'POST';
 	var success = function(response){
