@@ -490,63 +490,6 @@ function all_lights_alter(new_state){
 function light_speak(light_id, seconds){
 	alter_light(light_id)
 }
-function convert_hue_to_rgb(hue, sat){
-	if(hue==0){
-		return {R: 255, G: 0, B: 0}
-	}
-	var transitions = [
-		{
-			start: 0,
-			color: 'R'
-		},
-		{
-			start: 25558,
-			color: 'G'
-		},
-		{
-			start: 47185,
-			color : 'B'
-		},
-		{
-			start: 65535,
-			color: 'R'
-		}
-	];
-	prev = transitions[0];
-	current = transitions[0];
-	next = transitions[1];
-	for(var i=0; i<transitions.length; i++){
-		if(hue>transitions[i].start){
-			prev = current;
-			current = transitions[i];
-			next = transitions[i+1];
-		}
-		// else{
-		// 	break;
-		// }
-	}
-	if(sat==0){
-		var alpha = 0;
-	} else{
-		var alpha = sat/255;
-	}
-	var rgb_colors = {
-		R: 0,
-		G: 0,
-		B: 0,
-		A: alpha
-	};
-	var distance_to_prev = hue - prev.start;
-	var color1_amount = 255-(255 * distance_to_prev) / (next.start - prev.start);
-	var color1 = current.color;
-	var color2 = next.color;
-	var distance_to_next = next.start - hue;
-
-	var color2_amount = 255 - color1_amount;
-	rgb_colors[color1]=parseInt(color1_amount);
-	rgb_colors[color2]=parseInt(color2_amount);
-	return rgb_colors;
-}
 function display_light_hue_bri_sat(light){
 	var icon = light.info.dom_element.find('.icon');
 	if(is_color_bulb(light.info.id)){
@@ -571,4 +514,4 @@ function convertHueToHSL(hue, sat, bri){
     var satPct = sat/254 * 100;
     var briPct = bri/254 * 100;
     return [newHue, satPct, briPct, "hsl(" +newHue+ ", " +satPct+ "%, " +briPct+ "%)"];
-};
+}
