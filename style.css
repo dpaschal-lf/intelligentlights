@@ -132,7 +132,7 @@
 }
 .color-bar{
 	background: linear-gradient(
-		to right, red 0%, green 39%, blue 72%, red 100%
+		to right, red 0%, yellow 22%, green 39%, paleturquoise 55%, blue 72%, purple 85%, red 100%
 	);
 }
 .brightness-bar{
