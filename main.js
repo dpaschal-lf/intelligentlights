@@ -284,6 +284,27 @@ function calculate_cieXY_from_rgb(R,G,B){
 	var y = Y / (X + Y + Z);
 	return {x: x, y: y};
 }
+function convertXYToRGB (x, y, brightness){
+    var z = 1 - x - y;
+    console.log('z: ', z);
+    var Y = brightness;
+    var X = (Y/y) * x;
+    console.log('X: ', X);
+    var Z = (Y/y) * z;
+    console.log('Z: ', Z);
+    var r =  X * 1.656492 - Y * 0.354851 - Z * 0.255038;
+    var g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
+    var b =  X * 0.051713 - Y * 0.121364 + Z * 1.011530;
+    console.log('r: ', r, 'g: ', g, 'b: ', b);
+    r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * Math.pow(r, (1.0 / 2.4)) - 0.055;
+    g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * Math.pow(g, (1.0 / 2.4)) - 0.055;
+    b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * Math.pow(b, (1.0 / 2.4)) - 0.055;
+    r = Math.round(r);
+    g = Math.round(g);
+    b = Math.round(b);
+    return [r, g, b];
+
+}
 function display_light(light){
 	var state = light.state;
 	/*
@@ -315,7 +336,7 @@ function display_light(light){
 		alter_light(light.info.id,{
 			on: !light.state.on
 		},true);  //true to let the system know this was a direct click and not a recorded alter
-	})
+	});
 
 	var icon = $("<i>").addClass("fa fa-lightbulb-o").attr('aria-hidden','true');
 	light_icon.append(icon);
@@ -341,12 +362,16 @@ function display_light(light){
 		var color_control = $('<div>').addClass("color-bar");
 		light_controls.append(color_control);
 		color_control.click(function(){
-			//console.log('clicked: ',event,light);
-			var hue = calculate_ratio($(this).width(),event.offsetX,65535);
-			var sat = calculate_ratio($(this).height(),event.offsetY,254)
+            console.log('cc height: ', color_control.height());
+            console.log('offsetX: ', event.offsetX);
+            console.log('offsetY: ', event.offsetY);
+			var x = 0.16 + calculate_ratio(color_control.width(),event.offsetX,0.51);
+            console.log('x: ', x);
+			var y = 0.04 + calculate_ratio(color_control.height() - 2,event.offsetY,0.48);
+            console.log('yratio: ', calculate_ratio(color_control.height(),event.offsetY,0.48));
+            console.log('y: ', y);
 			alter_light(light.info.id,{
-				hue: hue,
-				sat: sat,
+			xy: [x, y]
 			},true);
 		});
 	}
@@ -374,7 +399,7 @@ function display_light(light){
 function calculate_ratio(element_dimension, property, max){
 	var ratio = property / element_dimension;
 	var new_value = max * ratio;	
-	return Math.floor(new_value);
+	return new_value;
 }
 function update_ip(){
 	bridge_ip = 'http://'+$(this).val()+'/api';
@@ -385,7 +410,7 @@ function show_feedback(message, status){
 function connect_to_bridge(){
 	var url = bridge_ip;
 	var data = {
-		"devicetype":"danielwpaschal",
+		"devicetype":"s3rFczEVheC9AZmgqBG0vBnfV0DoAsW9xQuC8pe4",
 	};
 	var method = 'POST';
 	var success = function(response){
@@ -454,7 +479,7 @@ function add_lights(light_id_array){
 		method: 'POST',
 		data: {'deviceid':light_id_array},
 		success_callback: function(response){
-			//console.log('success: ',response);
+			console.log('success: ',response);
 			process_lights(response);
 		},
 		error_callback: function(response){
@@ -535,35 +560,64 @@ function convert_hue_to_rgb(hue, sat){
 		G: 0,
 		B: 0,
 		A: alpha
-	}
+	};
 	var distance_to_prev = hue - prev.start;
+	console.log('distance to prev: ', distance_to_prev);
 	var color1_amount = 255-(255 * distance_to_prev) / (next.start - prev.start);
+	console.log('color 1 amount: ', color1_amount);
 	var color1 = current.color;
 	var color2 = next.color;
 	var distance_to_next = next.start - hue;
 
 	var color2_amount = 255 - color1_amount;
+	console.log('color 2 amount: ', color2_amount);
 	rgb_colors[color1]=parseInt(color1_amount);
 	rgb_colors[color2]=parseInt(color2_amount);
+	console.log('rgb_colors: ', rgb_colors);
 	return rgb_colors;
 }
 function display_light_hue_bri_sat(light){
 	var icon = light.info.dom_element.find('.icon');
-	var rgba = {R: 255, G: 255, B: 255, A: 1};
+	var rgb = [255, 255, 255];
 	if(is_color_bulb(light.info.id)){
-		rgba = convert_hue_to_rgb(light.state.hue,light.state.sat);
+        console.log('light.state: ', light.state);
+		rgb = convertXYToRGB(light.state.xy[0],light.state.xy[1], light.state.bri);
 		if(light.state.on){
-			console.log('changing ',light.info.dom_element,' to color ',rgba)
-			icon.css('background-color','rgba('+rgba.R+','+rgba.G+','+rgba.B+','+rgba.A+')');
+            console.log("light info: ", light.info);
+			console.log('changing ',light.info.dom_element,' to color ',rgb);
+			icon.css('background-color','rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')');
 		} else{
 			icon.css('background-color','');
 		}
 	}
-	rgba.A = (light.state.bri / 512).toFixed(2);
+	var opacity = (light.state.bri / 512).toFixed(2);
 	if(light.state.on){
-		console.log('changing ',light.info.dom_element,' to color ',rgba)
-		icon.css('box-shadow','0px 0px .5vw '+rgba.A+'vw rgba('+rgba.R+','+rgba.G+','+rgba.B+',1)');
+		console.log('changing ',light.info.dom_element,' to color ',rgb);
+		icon.css('box-shadow','0px 0px .5vw '+opacity+'vw rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',1)');
 	} else{
 		icon.css('box-shadow','');
 	}
+}
+function RGBtoXYZ(R, G, B)
+{
+    var_R = parseFloat( R / 255 );      //R from 0 to 255
+    var_G = parseFloat( G / 255 );       //G from 0 to 255
+    var_B = parseFloat( B / 255 );        //B from 0 to 255
+
+    if ( var_R > 0.04045 ) var_R =Math.pow( ( ( var_R + 0.055 ) / 1.055 ), 2.4);
+    else                   var_R = var_R / 12.92;
+    if ( var_G > 0.04045 ) var_G = Math.pow( (( var_G + 0.055 ) / 1.055 ), 2.4);
+    else                   var_G = var_G / 12.92;
+    if ( var_B > 0.04045 ) var_B = Math.pow( (( var_B + 0.055 ) / 1.055 ), 2.4);
+    else                   var_B = var_B / 12.92;
+
+    // var_R = var_R * 100;
+    // var_G = var_G * 100;
+    // var_B = var_B * 100;
+
+    //Observer. = 2°, Illuminant = D65
+    X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805
+    Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722
+    Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505
+    return [X, Y, Z]
 }
