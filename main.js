@@ -272,10 +272,7 @@ function display_light_update(light_data, new_state){
 				light_list[light_data[2]].info.dom_element.find('.light-on,.light-off').removeClass('light-on light-off').addClass(new_onoff);
 			case 'hue':
 			case 'bri':
-				function update_light_text_info(){
-					$('.brightness').text('bri: ').append($("<span>").text(new_state));
-			}
-				update_light_text_info();
+				
 				display_light_hue_bri_sat(light_list[light_data[2]]);
 		}
 	}
