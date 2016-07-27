@@ -357,13 +357,6 @@ function display_light(light){
 		},true);
 			
 	});
-	var off_on_container = $("<div>");
-	var off_on_control = $("<input>").prop('id','offon_'+light.info.id).attr('type','checkbox').prop('checked',light.state.on);
-		off_on_control.click(function(){
-		alter_light(light.info.id,{
-			on: !light.state.on
-		},true);
-	});
 
 	light_controls.append(brightness_control);
 	light_div.append(light_icon, light_info, light_controls);
