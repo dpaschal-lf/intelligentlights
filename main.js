@@ -272,7 +272,7 @@ function display_light_update(light_data, new_state){
 				light_list[light_data[2]].info.dom_element.find('.light-on,.light-off').removeClass('light-on light-off').addClass(new_onoff);
 			case 'hue':
 			case 'bri':
-				
+
 				display_light_hue_bri_sat(light_list[light_data[2]]);
 		}
 	}
@@ -334,7 +334,7 @@ function display_light(light){
 	var light_info = $("<div>").addClass('light-info');
 	var light_info_name = $("<div>").text('Name: ').append($("<span>").text(light.name));
 	var light_info_type = $("<div>").text('type: ').append($("<span>").text(light.type));
-	var light_info_brightness = $("<div>").text('bri: ').append($("<span>").text(light.state.bri)).addClass('brightness');
+	var light_info_brightness = $("<div>").text('bri: ').append($("<span>").text(light.state.bri))
 	light_info.append(light_info_name, light_info_type, light_info_brightness);
 
 	var light_controls = $("<div>").addClass('light-controls');
