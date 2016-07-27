@@ -353,20 +353,19 @@ function display_light(light){
 	var brightness_control = $('<div>').addClass('brightness-bar');
 	brightness_control.click(function(){
 		alter_light(light.info.id,{
-			bri: calculate_ratio($(this).width(),event.offsetX,254)
+			bri: calculate_ratio($(this).width(),event.offsetX,50)
 		},true);
 			
 	});
 	var off_on_container = $("<div>");
 	var off_on_control = $("<input>").prop('id','offon_'+light.info.id).attr('type','checkbox').prop('checked',light.state.on);
-	var off_on_label = $("<label>").text('ON/OFF').attr('for','offon_'+light.info.id);
-	off_on_control.click(function(){
+		off_on_control.click(function(){
 		alter_light(light.info.id,{
 			on: !light.state.on
 		},true);
 	});
-	//off_on_container.append(off_on_control,off_on_label);
-	light_controls.append(brightness_control,off_on_container);
+
+	light_controls.append(brightness_control);
 	light_div.append(light_icon, light_info, light_controls);
 	return light_div;
 
@@ -559,7 +558,7 @@ function display_light_hue_bri_sat(light){
 			icon.css('background-color','');
 		}
 	}
-	rgba.A = (light.state.bri / 512).toFixed(2);
+	 rgba.A = (light.state.bri / 512).toFixed(2);
 	if(light.state.on){
 		console.log('changing ',light.info.dom_element,' to color ',rgba)
 		icon.css('box-shadow','0px 0px .5vw '+rgba.A+'vw rgba('+rgba.R+','+rgba.G+','+rgba.B+',1)');
