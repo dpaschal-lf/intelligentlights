@@ -1,6 +1,6 @@
 $(document).ready(initialize);
 var bridge_address;
-var username=null;
+var username='r3hXZlnz793nmDOj0zwyqXGWmqUq3FPQqlprsFC7';
 var light_list={};
 var interval_timer_ids=[];
 var freak_out_interval;
@@ -196,7 +196,8 @@ function blink_light_on(light_id, time_interval){
 		blink_light_off(light_id);
 	}
 	interval_timer_ids[light_id] = setInterval(function(){
-		alter_light(light_id,{alert:'select'});	
+		alter_light(light_id,{alert:'select'});
+
 	},time_interval);
 }
 function blink_light_off(light_id){
@@ -233,6 +234,7 @@ function color_rotate_toggle(light_id){
 }
 //TODO: check if the light can be reached before trying to alter it
 function alter_light(light_id,properties, direct){
+	console.log(light_id);
 	var user=get_active_user();
 	if(!user){
 		return;
@@ -272,6 +274,7 @@ function display_light_update(light_data, new_state){
 				light_list[light_data[2]].info.dom_element.find('.light-on,.light-off').removeClass('light-on light-off').addClass(new_onoff);
 			case 'hue':
 			case 'bri':
+				console.log('this is the new state');
 				display_light_hue_bri_sat(light_list[light_data[2]]);
 		}
 	}
@@ -360,8 +363,10 @@ function display_light(light){
 	var light_controls = $("<div>").addClass('light-controls');
 	if(is_color_bulb(light.info.id)){
 		var color_control = $('<div>').addClass("color-bar");
+
 		light_controls.append(color_control);
 		color_control.click(function(){
+
             console.log('cc height: ', color_control.height());
             console.log('offsetX: ', event.offsetX);
             console.log('offsetY: ', event.offsetY);
@@ -370,9 +375,11 @@ function display_light(light){
 			var y = 0.04 + calculate_ratio(color_control.height() - 2,event.offsetY,0.48);
             console.log('yratio: ', calculate_ratio(color_control.height(),event.offsetY,0.48));
             console.log('y: ', y);
+
 			alter_light(light.info.id,{
 			xy: [x, y]
 			},true);
+			$('.color-bar').append($('<div>').css({}))
 		});
 	}
 	var brightness_control = $('<div>').addClass('brightness-bar');
@@ -410,7 +417,9 @@ function show_feedback(message, status){
 function connect_to_bridge(){
 	var url = bridge_ip;
 	var data = {
-		"devicetype":"s3rFczEVheC9AZmgqBG0vBnfV0DoAsW9xQuC8pe4",
+
+
+		"devicetype":"r3hXZlnz793nmDOj0zwyqXGWmqUq3FPQqlprsFC7"
 	};
 	var method = 'POST';
 	var success = function(response){
