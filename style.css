@@ -21,8 +21,9 @@
 }
 .light-div{
 	width: 100%;
-	font-size: 1vh;
+	font-size: 1.3vh;
 	height: 10vh;
+	margin: 9px 0;
 }
 .minified.light-div{
 	font-size: .5vh;
@@ -65,15 +66,18 @@
 	font-weight:initial;
 }
 .light-info>div:nth-child(n+2){
-	margin-left: 5%;
+	/*margin-left: 5%;*/
 	width:90%;
 }
 .light-div > .icon{
 	display: inline-block;
-	width: 15%;
-	height: 100%;
-	font-size: 600%;
+	width: 4.3vh;
+	height: 4.3vh;
+	font-size: 3vh;
 	text-align: center;
+	position: relative;
+	top: -9px;
+	left: 6px;
 }
 .light-div.minified .icon, .minified.light-div:hover .icon{
 	font-size: 600%;
@@ -90,11 +94,14 @@
 }
 .light-div > .light-info{
 	display: inline-block;
-	width: 35%;
+	width: 72%;
+	height: 5vh;
+	position: relative;
+	left: 14px;
 }
 .light-div > .light-controls{
 	display: inline-block;
-	width: 50%;
+	width: 100%;
 	background-color: lavender;
 }
 .minified.light-div > .light-controls{
@@ -125,10 +132,10 @@
 	);
 }
 .color-bar, .brightness-bar{
-	height: 20px;
+	height: 17px;
 	cursor: pointer;
-	width: 80%;
-	margin: 0 auto;	
+	width: 100%;
+	margin: 0 auto;
 }
 .color-bar{
 	background: linear-gradient(
@@ -153,6 +160,7 @@
 	display: inline-block;
 	background-color: lightgreen;
 }
+
 .free-light{
 	position: absolute;
 }
