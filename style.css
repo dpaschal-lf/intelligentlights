@@ -196,7 +196,114 @@
     background-color: lightgreen;
 }
 
+
 .free-light {
     position: absolute;
 }
+.light-info{
+	padding-left: 2%;
+}
+.minified.light-div > .light-info{
+	display: none;
+}
+.minified.light-div:hover > .light-info{
+	display: inline-block;
+}
+.light-info>div{
+	font-weight: bold;
+}
+.light-info>div>span{
+	font-weight:initial;
+}
+.light-info>div:nth-child(n+2){
+	margin-left: 5%;
+	width:90%;
+}
+.light-div > .icon{
+	display: inline-block;
+	width: 15%;
+	height: 100%;
+	font-size: 600%;
+	text-align: center;
+}
+.light-div.minified .icon, .minified.light-div:hover .icon{
+	font-size: 600%;
+	border-radius: 100%;
+	position: relative;
+	height: 5vh;
+	width: 5vh;
+}
+.light-div.minified i{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+.light-div > .light-info{
+	display: inline-block;
+	width: 35%;
+}
+.light-div > .light-controls{
+	display: inline-block;
+	width: 50%;
+	background-color: lavender;
+}
+.minified.light-div > .light-controls{
+	display: none;
+}
+.minified.light-div:hover > .light-controls{
+	display: inline-block;
+}
+.unreachable{
+	position: relative;
+	border: 3px solid red;
+	border-radius: 100%;
+	height: 10vh;
+	width: 10vh;
+}
+.unreachable:before{
+	content: '';
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	left: 0px;
+	top: 0px;
+	transform: rotateZ(45deg);
+	border-radius: 100%;
+	background: linear-gradient(
+		rgba(255,0,0,0) 0%, rgba(255,0,0,0) 45%, rgba(255,0,0,1) 46%,
+		rgba(255,0,0,1) 54%, rgba(255,0,0,0) 55%, rgba(255,0,0,0) 100%
+	);
+}
+.color-bar, .brightness-bar{
+	height: 20px;
+	cursor: pointer;
+	width: 80%;
+	margin: 0 auto;	
+}
+.color-bar{
+	background: linear-gradient(
+		to right, red 0%, yellow 22%, green 39%, paleturquoise 55%, blue 72%, purple 85%, red 100%
+	);
+	opacity: 0.7;
+}
+.brightness-bar{
+	background:linear-gradient(
+		to right, black 0%, white 100%
+	);
+}
+
+#light_placement_container{
+	width: 100%;
+	height: 75vh;
+	overflow: hidden;
+}
+#light-placement{
+	width: 75%;
+	height: 100%;
+	box-sizing: border-box;
+	display: inline-block;
+	background-color: lightgreen;
+}
+
 

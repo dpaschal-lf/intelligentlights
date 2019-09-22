@@ -2,18 +2,18 @@
 <html>
 <head>
 	<title></title>
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="includes/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="includes/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="style.css" rel="stylesheet">
-	<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="includes/jquery-2.1.4.js"></script>
+	<script src="includes/bootstrap.min.js"></script>
+	<script src="includes/jquery-ui.js"></script>
 	<script src="main.js"></script>
 	<script src="music_sync.js"></script>
 </head>
 <body>
-	<input id="bridge_ip" type="text" placeholder="put the bridge IP address here" value="192.168.1.99" placeholder="192.168.0.132">
-	<div>Press the hue bridge button and then <button id="connect-button">this button</button></div>
+	<input id="bridge_ip" type="text" placeholder="put the bridge IP address here" placeholder="192.168.1.99" value="10.2.211.19">
+	<div>Press the hue bridge button and then <button id="connect-button">this button</button><button id="record-button">not recording</button></div>
 	<div id="light_placement_container">
 		<div id="light-list" class="drop-partner"></div>
 		<div id="light-placement" class="drop-partner"></div>

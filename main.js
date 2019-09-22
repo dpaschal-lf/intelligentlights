@@ -1,6 +1,6 @@
 $(document).ready(initialize);
 var bridge_address;
-var username="-5LvL6u1OwtkZhzSVHrgm3Hii2D4sygTvCrZ9uhN";
+var username=null;//"-5LvL6u1OwtkZhzSVHrgm3Hii2D4sygTvCrZ9uhN";
 var light_list={};
 var interval_timer_ids=[];
 var freak_out_interval;
@@ -196,7 +196,8 @@ function blink_light_on(light_id, time_interval){
 		blink_light_off(light_id);
 	}
 	interval_timer_ids[light_id] = setInterval(function(){
-		alter_light(light_id,{alert:'select'});	
+		alter_light(light_id,{alert:'select'});
+
 	},time_interval);
 }
 function blink_light_off(light_id){
@@ -233,6 +234,7 @@ function color_rotate_toggle(light_id){
 }
 //TODO: check if the light can be reached before trying to alter it
 function alter_light(light_id,properties, direct){
+	console.log(light_id);
 	var user=get_active_user();
 	if(!user){
 		return;
@@ -272,7 +274,7 @@ function display_light_update(light_data, new_state){
 				light_list[light_data[2]].info.dom_element.find('.light-on,.light-off').removeClass('light-on light-off').addClass(new_onoff);
 			case 'hue':
 			case 'bri':
-
+				console.log('this is the new state');
 				display_light_hue_bri_sat(light_list[light_data[2]]);
 		}
 	}
@@ -320,7 +322,7 @@ function display_light(light){
 
 	var icon = $("<i>").addClass("fa fa-lightbulb-o").attr('aria-hidden','true');
 	light_icon.append(icon);
-	
+
 /*
 			<div class="light-info">
 				<div>Name: <span>Hue white lamp 1</span></div>
@@ -340,6 +342,7 @@ function display_light(light){
 	var light_controls = $("<div>").addClass('light-controls');
 	if(is_color_bulb(light.info.id)){
 		var color_control = $('<div>').addClass("color-bar");
+
 		light_controls.append(color_control);
 		color_control.click(function(){
 			//console.log('clicked: ',event,light);
@@ -349,6 +352,7 @@ function display_light(light){
 				hue: hue,
 				sat: sat,
 			},true);
+			$('.color-bar').append($('<div>').css({}))
 		});
 	}
 	var brightness_control = $('<div>').addClass('brightness-bar');
@@ -356,7 +360,7 @@ function display_light(light){
 		alter_light(light.info.id,{
 			bri: calculate_ratio($(this).width(),event.offsetX,254)
 		},true);
-			
+
 	});
 
 	light_controls.append(brightness_control);
@@ -366,7 +370,7 @@ function display_light(light){
 }
 function calculate_ratio(element_dimension, property, max){
 	var ratio = property / element_dimension;
-	var new_value = max * ratio;	
+	var new_value = max * ratio;
 	return Math.floor(new_value);
 }
 function update_ip(){
@@ -393,7 +397,7 @@ function connect_to_bridge(){
 			localStorage.username = username;
 			show_feedback('User connected and saved to localstorage');
 		}
-		
+
 	}
 	var error = function(response){
 		//console.log('connection error: ',response)
@@ -473,90 +477,40 @@ function freak_out(){
 function all_lights_onoff(new_state){
 	for(var i in light_list){
 		alter_light(i,{on:new_state});
-	}	
+	}
 }
 function all_lights_alter(new_state){
 	for(var i in light_list){
 		alter_light(i,new_state);
-	}	
+	}
 }
 function light_speak(light_id, seconds){
 	alter_light(light_id)
 }
-function convert_hue_to_rgb(hue, sat){
-	if(hue==0){
-		return {R: 255, G: 0, B: 0}
-	}
-	var transitions = [
-		{ 
-			start: 0,
-			color: 'R'
-		},
-		{
-			start: 25558, 
-			color: 'G'
-		},
-		{
-			start: 47185,
-			color : 'B'
-		},
-		{
-			start: 65535,
-			color: 'R'
-		}
-	];
-	prev = transitions[0];
-	current = transitions[0];
-	next = transitions[1];
-	for(var i=0; i<transitions.length; i++){
-		if(hue>transitions[i].start){
-			prev = current;
-			current = transitions[i];
-			next = transitions[i+1];
-		}
-		// else{
-		// 	break;
-		// }
-	}
-	if(sat==0){
-		var alpha = 0;
-	} else{
-		var alpha = sat/255;
-	}
-	var rgb_colors = {
-		R: 0,
-		G: 0,
-		B: 0,
-		A: alpha
-	}
-	var distance_to_prev = hue - prev.start;
-	var color1_amount = 255-(255 * distance_to_prev) / (next.start - prev.start);
-	var color1 = current.color;
-	var color2 = next.color;
-	var distance_to_next = next.start - hue;
-
-	var color2_amount = 255 - color1_amount;
-	rgb_colors[color1]=parseInt(color1_amount);
-	rgb_colors[color2]=parseInt(color2_amount);
-	return rgb_colors;
-}
 function display_light_hue_bri_sat(light){
 	var icon = light.info.dom_element.find('.icon');
-	var rgba = {R: 255, G: 255, B: 255, A: 1};
 	if(is_color_bulb(light.info.id)){
-		rgba = convert_hue_to_rgb(light.state.hue,light.state.sat);
+        var hsl = convertHueToHSL(light.state.hue, light.state.sat, light.state.bri);
+        var hslString = hsl[3];
+        console.log('hsl: ', hsl);
 		if(light.state.on){
-			console.log('changing ',light.info.dom_element,' to color ',rgba)
-			icon.css('background-color','rgba('+rgba.R+','+rgba.G+','+rgba.B+','+rgba.A+')');
+			// console.log('changing ',light.info.dom_element,' to color ',rgba)
+			icon.css('background-color',hslString);
 		} else{
 			icon.css('background-color','');
 		}
 	}
-	 rgba.A = (light.state.bri / 512).toFixed(2);
+	 //rgba.A = (light.state.bri / 512).toFixed(2);
+
 	if(light.state.on){
-		console.log('changing ',light.info.dom_element,' to color ',rgba)
-		icon.css('box-shadow','0px 0px .5vw '+rgba.A+'vw rgba('+rgba.R+','+rgba.G+','+rgba.B+',1)');
+		icon.css('box-shadow','0px 0px .5vw 1vw' + hslString);
 	} else{
 		icon.css('box-shadow','');
 	}
+}
+function convertHueToHSL(hue, sat, bri){
+    var newHue = hue/182.0417;
+    var satPct = sat/254 * 100;
+    var briPct = bri/254 * 100;
+    return [newHue, satPct, briPct, "hsl(" +newHue+ ", " +satPct+ "%, " +briPct+ "%)"];
 }
